@@ -1,0 +1,8 @@
+CREATE TABLE contacts (
+ _id SERIAL PRIMARY KEY,
+ first_name VARCHAR,
+ last_name VARCHAR,
+ address TEXT,
+ email_address TEXT,
+ contact_number VARCHAR
+);
