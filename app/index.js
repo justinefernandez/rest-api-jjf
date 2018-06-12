@@ -7,7 +7,7 @@ const pg = require('pg')
 const config = require('../config')
 const app = express()
 
-const pool = new pg.Pool(env || config.redisStore);
+const pool = new pg.Pool(config.redisStore);
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())

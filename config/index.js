@@ -1,5 +1,4 @@
 const config = {}
-const env = process.env.DATABASE_URL
 
 config.redisStore = {
     host: 'ec2-54-235-206-118.compute-1.amazonaws.com',
