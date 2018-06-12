@@ -6,3 +6,7 @@ CREATE TABLE contacts (
  email_address TEXT,
  contact_number VARCHAR
 );
+
+
+psql -h ec2-54-235-206-118.compute-1.amazonaws.com -U kkdtmoodzjiafk d949s1gfvq5rla
+4664df2dbd94ecd572cdcbb58d0bb8c3e26ad837f3cec078fb252bede5689128

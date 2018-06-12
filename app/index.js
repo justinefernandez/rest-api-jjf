@@ -1,4 +1,4 @@
-const path = require('path')
+    const path = require('path')
 const express = require('express')
 const exphbs = require('express-handlebars')
 const bodyParser = require('body-parser')
@@ -7,7 +7,7 @@ const pg = require('pg')
 const config = require('../config')
 const app = express()
 
-const pool = new pg.Pool(config.redisStore);
+const pool = new pg.Pool(env || config.redisStore);
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
