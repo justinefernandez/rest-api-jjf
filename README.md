@@ -1,3 +1,3 @@
 # RESTful API
 
-Restful api using nodejs
+RESTful API using NodeJS and deploy it into Heroku
