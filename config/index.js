@@ -7,5 +7,5 @@ config.redisStore = {
     password: process.env.PASSWORD,
     port: process.env.PORT,
 }
-
+console.log(config);
 module.exports = config
