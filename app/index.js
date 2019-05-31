@@ -1,98 +1,83 @@
-const path = require('path')
-const express = require('express')
-const exphbs = require('express-handlebars')
-const bodyParser = require('body-parser')
-const pg = require('pg')
+const express = require('express');
+const bodyParser = require('body-parser');
+const { Pool, Client } = require('pg');
+const config = require('../config');
 
-const config = require('../config')
-const app = express()
+const app = express();
 
-const pool = new pg.Pool(config.redisStore);
+// pools will use environment variables
+// for connection information
+// const pool = new Pool(config.redisStore);
 
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+const pool = new Pool({
+  user: 'kkdtmoodzjiafk',
+  host: 'ec2-54-235-206-118.compute-1.amazonaws.com',
+  database: 'd949s1gfvq5rla',
+  password: '4664df2dbd94ecd572cdcbb58d0bb8c3e26ad837f3cec078fb252bede5689128',
+  port: 5432,
+  ssl: true,
+});
+// const pool = new pg.Pool(config.redisStore);
 
-app.get('/api/contacts', function (request, response) {
-    pool.connect(function (err, client, done) {
-        if (err) {
-        return next(err)
-        }
-        client.query('SELECT * FROM contacts;', [], function (err, result) {
-        done()
-        if (err) {
-            return next(err)
-        }
-        response.json(result.rows)
-        })
-    }) 
-})
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.post('/api/contacts', function (request, response) {  
-    const contacts = request.body
-    pool.connect(function (err, client, done) {
-      if (err) {
-        return next(err)
-      }
-      client.query('INSERT INTO contacts (first_name, last_name, address, email_address, contact_number) VALUES ($1, $2, $3, $4, $5);', [contacts.first_name, contacts.last_name, contacts.address, contacts.email_address, contacts.contact_number], function (err, result) {
-        done()
-        if (err) {
-          return next(err)
-        }
-        response.send(200)
-      })
-    })
-  })
+app.get('/api/contacts', (request, response) => {
+  pool.query('SELECT * FROM contacts;', (err, res) => {
+    if (err) {
+      response.json(err.stack);
+    }
+    pool.end();
+    response.json(res.rows);
+  });
+});
 
-app.get('/api/contacts/:id',  function(request, response) {
-    const id = request.params.id
-    pool.connect(function (err, client, done) {
-        if (err) {
-        return next(err)
-        }
-        var query = "SELECT * FROM contacts WHERE _id = '" + id + "'";
-        client.query(query, [], function (err, result) {
-        done()
-        if (err) {
-            return next(err)
-        }
-        response.json(result.rows)
-        })
-    }) 
-})
+app.post('/api/contacts', (request, response) => {
+  const contacts = request.body;
+  pool.query('INSERT INTO contacts (first_name, last_name, address, email_address, contact_number) VALUES ($1, $2, $3, $4, $5);', [contacts.first_name, contacts.last_name, contacts.address, contacts.email_address, contacts.contact_number], (err, res) => {
+    if (err) {
+      response.json(err.stack);
+    }
+    pool.end();
+    response.send(200);
+  });
+});
 
-app.put('/api/contacts/:id', function(request, response) {
-    const id = request.params.id
-    const contacts = request.body
-    pool.connect(function (err, client, done) {
-        if (err) {
-        return next(err)
-        }
-        var query = "UPDATE contacts SET first_name='"+ contacts.first_name +"', last_name='"+ contacts.last_name +"', address='"+ contacts.address +"', email_address='"+ contacts.email_address +"', contact_number='"+ contacts.contact_number +"' WHERE _id = '" + id + "'";
-        client.query(query, [], function (err, result) {
-        done()
-        if (err) {
-            return next(err)
-        }
-        response.send(200)
-        })
-    }) 
-})
+app.get('/api/contacts/:id', (request, response) => {
+  const { id } = request.params;
+  const query = `SELECT * FROM contacts WHERE _id = '${id}'`;
+  pool.query(query, (err, res) => {
+    if (err) {
+      response.json(err.stack);
+    }
+    pool.end();
+    response.json(res.rows);
+  });
+});
 
-app.delete('/api/contacts/:id', function(request, response) {
-    const id = request.params.id
-    pool.connect(function (err, client, done) {
-        if (err) {
-        return next(err)
-        }
-        var query = "DELETE FROM contacts WHERE _id = '" + id + "'";
-        client.query(query, [], function (err, result) {
-        done()
-        if (err) {
-            return next(err)
-        }
-        response.send(200)
-        })
-    }) 
-})
+app.put('/api/contacts/:id', (request, response) => {
+  const { id } = request.params;
+  const contacts = request.body;
+  const query = `UPDATE contacts SET first_name='${contacts.first_name}', last_name='${contacts.last_name}', address='${contacts.address}', email_address='${contacts.email_address}', contact_number='${contacts.contact_number}' WHERE _id = '${id}'`;
+  pool.query(query, (err, res) => {
+    if (err) {
+      response.json(err.stack);
+    }
+    pool.end();
+    response.json(res.rows);
+  });
+});
 
-module.exports = app
+app.delete('/api/contacts/:id', (request, response) => {
+  const { id } = request.params;
+  const query = `DELETE FROM contacts WHERE _id = '${id}'`;
+  pool.query(query, (err, res) => {
+    if (err) {
+      response.json(err.stack);
+    }
+    pool.end();
+    response.json(res.rows);
+  });
+});
+
+module.exports = app;
