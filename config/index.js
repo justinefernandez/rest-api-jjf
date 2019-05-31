@@ -8,4 +8,6 @@ config.redisStore = {
   port: process.env.PORT,
   ssl: process.env.SSL,
 };
+console.log(config.redisStore);
+console.log(config);
 module.exports = config;
