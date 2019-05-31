@@ -1,23 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { Pool, Client } = require('pg');
+const { Pool } = require('pg');
 const config = require('../config');
 
 const app = express();
 
-// pools will use environment variables
-// for connection information
-// const pool = new Pool(config.redisStore);
-
-const pool = new Pool({
-  user: 'kkdtmoodzjiafk',
-  host: 'ec2-54-235-206-118.compute-1.amazonaws.com',
-  database: 'd949s1gfvq5rla',
-  password: '4664df2dbd94ecd572cdcbb58d0bb8c3e26ad837f3cec078fb252bede5689128',
-  port: 5432,
-  ssl: true,
-});
-// const pool = new pg.Pool(config.redisStore);
+const pool = new Pool(config.redisStore);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
