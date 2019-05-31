@@ -47,7 +47,7 @@ app.put('/api/contacts/:id', async (request, response) => {
     if (err) {
       response.json(err.stack);
     }
-    response.json(res.rows);
+    response.send(200);
   });
 });
 
@@ -58,7 +58,7 @@ app.delete('/api/contacts/:id', async (request, response) => {
     if (err) {
       response.json(err.stack);
     }
-    response.json(res.rows);
+    response.send(200);
   });
 });
 

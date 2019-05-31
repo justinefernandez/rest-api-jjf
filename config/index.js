@@ -8,5 +8,4 @@ config.redisStore = {
   port: 5432,
   ssl: true,
 };
-console.log(config.redisStore);
 module.exports = config;
